@@ -1,0 +1,26 @@
+.group-header-divider {
+  margin: 20px 0 10px 0;
+}
+
+.mui-tabs__bar {
+  margin-bottom: 25px;
+}
+
+.mui-tabs__bar a:hover {
+  cursor: pointer;
+}
+
+.info {
+  background-color: #cce5ff;
+  border-color: #b8daff;
+  border: 1px solid transparent;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-radius: .25rem;
+  color: #004085;
+  margin-bottom: 1rem;
+  padding: .75rem 1.25rem;
+  position: relative;
+}

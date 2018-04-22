@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+
+    <form>
+        {% for room in room_details %}
+                <input type="button" value="Room {{room.id}}" onclick="window.location.href='/api/groupchat/{{username}}/{{room.id}}/chat/'"/>
+        {% endfor %}
+    </form> 
+
+</html>

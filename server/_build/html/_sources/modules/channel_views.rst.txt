@@ -1,0 +1,5 @@
+channel Views
+=======
+ 
+.. automodule:: channel.views
+    :members:

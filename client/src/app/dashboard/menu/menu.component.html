@@ -1,0 +1,35 @@
+<div id="sidedrawer" class="mui--no-user-select">
+  <div id="sidedrawer-brand" class="mui--appbar-line-height">
+    <span class="mui--text-title">CyStudy</span>
+  </div>
+  <div class="mui-divider"></div>
+  <ul>
+    <li
+      [routerLink]="['/dashboard']"
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{exact: true}">Home</li>
+    <li
+      [routerLink]="['/dashboard/join/']"
+      [routerLinkActive]="['active']">Join Study Group</li>
+    <li
+      [routerLinkActive]="['active']"
+      [routerLink]="['/dashboard/create/']">Create Study Group</li>
+    <li *ngIf="!(!(!(!isAdmin)))"
+      [routerLinkActive]="['active']"
+      [routerLink]="['/dashboard/courses/']">Manage Courses</li>
+    <li *ngIf="!(!(!(!isMod)))"
+      [routerLinkActive]="['active']"
+      [routerLink]="['/dashboard/moderation/']">Moderate</li>
+    <li (click)="logout()">Log out</li>
+  </ul>
+</div>
+<header id="header">
+  <div class="mui-appbar mui--appbar-line-height">
+    <div class="mui-container-fluid">
+      <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
+      <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
+      <span class="mui--text-title mui--visible-xs-inline-block">CyStudy</span>
+    </div>
+  </div>
+</header>
+<div class="mui--appbar-height"></div>

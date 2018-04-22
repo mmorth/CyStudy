@@ -1,0 +1,39 @@
+.center {
+  text-align: center;
+}
+
+.margin-top-0 {
+  margin-top: 0;
+}
+
+.margin-bottom-30 {
+  margin-bottom: 30px;
+}
+
+.right {
+  float: right;
+}
+
+a:link,
+a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #666;
+}
+
+@media (min-width: 768px) {
+  body.hide-sidedrawer #header {
+    left: 0;
+  }
+
+  body.hide-sidedrawer #sidedrawer {
+    transform: translate(0px);
+  }
+
+  body.hide-sidedrawer #content-wrapper {
+    margin-left: 0;
+  }
+}

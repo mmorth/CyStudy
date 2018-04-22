@@ -1,0 +1,28 @@
+<h1>Add a new Course</h1>
+
+<form class="mui-form" (ngSubmit)="onSubmit()" #create="ngForm">
+  <div class="mui-textfield mui-textfield--float-label">
+    <input type="text" [(ngModel)]="courseDepartment" name="courseDepartment">
+    <label>Department</label>
+  </div>
+  <div class="mui-textfield mui-textfield--float-label">
+    <input type="text" [(ngModel)]="courseNum" name="courseNum">
+    <label>Course Number</label>
+  </div>
+  <div class="mui-textfield mui-textfield--float-label">
+    <input type="text" [(ngModel)]="courseTitle" name="courseTitle">
+    <label>Course Title</label>
+  </div>
+  <button type="submit" class="mui-btn mui-btn--primary">Submit</button>
+</form>
+
+<h1>Remove a Course</h1>
+
+<form class="mui-form" (ngSubmit)="onRemove()" #delete="ngForm">
+  <div class="mui-select">
+    <select [(ngModel)]="courseIDtoDelete" name="course">
+      <option *ngFor="let key of keys" [value]="courses[key].id"> {{ courses[key].id }}. {{ courses[key].course_department }} {{ courses[key].course_number }} </option>
+    </select>
+  </div>
+  <button type="submit" class="mui-btn mui-btn--danger">Remove</button>
+</form>

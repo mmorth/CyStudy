@@ -1,0 +1,20 @@
+.login-form {
+  margin: 0 auto;
+  padding: 0 10px;
+  max-width: 400px;
+}
+
+.login-logo {
+  margin: 40px 0 30px 0;
+}
+
+.error-text {
+  color: red;
+  margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+  .login-container {
+    padding-right: 200px;
+  }
+}

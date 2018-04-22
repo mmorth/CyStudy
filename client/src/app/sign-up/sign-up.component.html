@@ -1,0 +1,30 @@
+<div class="login-container">
+  <div class="center login-logo">
+    <img src="/assets/images/logo-transparent.png" alt="CyStudy" width="300"/>
+  </div>
+  <form class="mui-form login-form" (ngSubmit)="onSubmit()" #signUp="ngForm">
+    <div class="mui-textfield mui-textfield--float-label">
+      <input
+        type="fist-name" [(ngModel)]="first_name" name="firstName" required>
+      <label>First name</label>
+    </div>
+    <div class="mui-textfield mui-textfield--float-label">
+      <input type="last-name" [(ngModel)]="last_name" name="lastName" required>
+      <label>Last name</label>
+    </div>
+    <div class="mui-textfield mui-textfield--float-label">
+      <input type="email" [(ngModel)]="email" name="email" required>
+      <label>Electronic mail</label>
+    </div>
+    <div class="mui-textfield mui-textfield--float-label">
+      <input type="text" [(ngModel)]="username" name="username" required>
+      <label>Username</label>
+    </div>
+    <div class="mui-textfield mui-textfield--float-label">
+      <input type="password" [(ngModel)]="password" name="password" required>
+      <label>Password</label>
+    </div>
+    <button type="submit" class="mui-btn mui-btn--accent">Sign up</button>
+    <div *ngIf="error">{{ error }}</div>
+  </form>
+</div>

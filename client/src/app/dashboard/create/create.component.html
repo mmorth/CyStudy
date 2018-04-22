@@ -1,0 +1,11 @@
+<h1>Create a Study Group</h1>
+<p>Create a new study group by selecting a class from the drop down below.</p>
+<p>If you don't see your class, please contact the Course Administrator.</p>
+<form class="mui-form" (ngSubmit)="onSubmit()" #create="ngForm">
+  <div class="mui-select">
+    <select [(ngModel)]="courseID" name="course">
+      <option *ngFor="let key of keys" [value]="courses[key].id"> {{ courses[key].id }}. {{ courses[key].course_department }} {{ courses[key].course_number }} </option>
+    </select>
+  </div>
+  <button type="submit" class="mui-btn mui-btn--primary">Submit</button>
+</form>

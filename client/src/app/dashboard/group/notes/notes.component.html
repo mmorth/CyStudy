@@ -1,0 +1,16 @@
+<ul>
+  <li>
+    <form #noteForm="ngForm">
+      <textarea
+        class="note-textarea"
+        placeholder="Type something..."
+        [(ngModel)]="note.text"
+        name="text"></textarea>
+      <button type="submit" class="note-button right" (click)="createNote()">Post</button>
+    </form>
+  </li>
+  <li *ngFor="let key of keys">
+    <button type="button" class="close right" (click)=deleteNote(notes[key].id)>&times;</button>
+    <p>{{ notes[key].text }}</p>
+  </li>
+</ul>

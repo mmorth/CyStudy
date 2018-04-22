@@ -1,0 +1,29 @@
+<div class="mui-row">
+  <div class="mui-col-md-6">
+    <h1>Join a Study Group</h1>
+    {{ noGroups }}
+  </div>
+  <div class="mui-col-md-6">
+    <a
+      [routerLink]="['/dashboard/create']"
+      class="mui-btn mui-btn--danger right create-btn">Create Group</a>
+  </div>
+</div>
+<div *ngFor="let key of studyGroupsKeyArray" class="mui-panel">
+  <div class="mui-row">
+    <div class="mui-col-md-10">
+      <h2 class="sg-course">
+        {{ studyGroups[key].course_department }} {{ studyGroups[key].course_number }}: {{ studyGroups[key].course_name }}
+      </h2>
+      <p><strong>ID</strong>: {{ studyGroups[key].id }}</p>
+      <p><strong>Members</strong>: {{ members[key] }}</p>
+    </div>
+    <div class="mui-col-md-2">
+      <button
+        [attr.id]="'join-btn-' + studyGroups[key].id"
+        class="mui-btn mui-btn--primary right leave-btn margin-top-0"
+        (click)="joinStudyGroup(studyGroups[key].id)">Join
+      </button>
+    </div>
+  </div>
+</div>

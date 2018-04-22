@@ -1,0 +1,18 @@
+<div class="login-container">
+  <div class="center login-logo">
+    <img src="/assets/images/logo-transparent.png" alt="CyStudy" width="300"/>
+  </div>
+  <form class="mui-form login-form" (ngSubmit)="onSubmit()" #login="ngForm">
+    <div class="mui-textfield mui-textfield--float-label">
+      <input type="text" [(ngModel)]="username" name="username">
+      <label>Username</label>
+    </div>
+    <div class="mui-textfield mui-textfield--float-label">
+      <input type="password" [(ngModel)]="password" name="password">
+      <label>Password</label>
+    </div>
+    <button type="submit" class="mui-btn mui-btn--primary">Log in</button>
+    <a [routerLink]="['/sign-up']" class="mui-btn">Sign up</a>
+    <div *ngIf="error" class="error-text">{{ error }}</div>
+  </form>
+</div>

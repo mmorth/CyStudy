@@ -1,0 +1,10 @@
+<h1>Remove A User</h1>
+
+<form class="mui-form" (ngSubmit)="onSubmit()" #delete="ngForm">
+  <div class="mui-select">
+    <select [(ngModel)]="userIDtoDelete" name="users">
+      <option *ngFor="let key of keys" [value]="users[key].id"> {{ users[key].id }}. {{ users[key].username }}: {{ users[key].first_name }} {{ users[key].last_name }}, {{ users[key].email }}  </option>
+    </select>
+  </div>
+  <button type="submit" class="mui-btn mui-btn--danger">Remove</button>
+</form>

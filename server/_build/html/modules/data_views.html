@@ -1,0 +1,263 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>data Views &#8212; cystudy  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-views">
+<h1>data Views<a class="headerlink" href="#data-views" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-data.views"></span><dl class="function">
+<dt id="data.views.change_user_settings">
+<code class="descclassname">data.views.</code><code class="descname">change_user_settings</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#change_user_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.change_user_settings" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Updates information on an existing user. The username, first_name, last_name, email, and password of the user are passed in from the client as json.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> – The request made from the client.</li>
+<li><strong>user_id</strong> – The id of the user to update informaion about.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An HttpResponse with the username of the user created (used for testing).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.create_user">
+<code class="descclassname">data.views.</code><code class="descname">create_user</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#create_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.create_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new user. The username, first_name, last_name, email, password, and user_type of the user are passed in from the client as json.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – The request made from the client.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An HttpResponse with the username of the user created (used for testing).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.delete_user">
+<code class="descclassname">data.views.</code><code class="descname">delete_user</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a specific user with the give id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> – The request made from the client.</li>
+<li><strong>user_id</strong> – The id of the user to remove.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An HttpResponse with the username of the user created (used for testing).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.display_user">
+<code class="descclassname">data.views.</code><code class="descname">display_user</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#display_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.display_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns in json the information about a specific user. It returns the id, username, email, first_name, last_name, group, and reports for a user in json format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> – The request made from the client.</li>
+<li><strong>id</strong> – The id of the user to show the information about.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A JsonResponse of the user information.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.list_users">
+<code class="descclassname">data.views.</code><code class="descname">list_users</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#list_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.list_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns in json the information about all users. It returns the id, username, email, first_name, last_name, group, and reports for all users in json format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – The request made from the client.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A JsonResponse of the user information.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.login_view">
+<code class="descclassname">data.views.</code><code class="descname">login_view</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#login_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.login_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides the login functionality using Django authentication. The username and password are passed in from the client as json.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – The request made from the client.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An HttpResponse with either the username or an HttpResponse with status of 401.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.logout_view">
+<code class="descclassname">data.views.</code><code class="descname">logout_view</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#logout_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.logout_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides the logout functionality using Django authentication.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> – The request made from the client.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An empty HttpResponse.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.options">
+<code class="descclassname">data.views.</code><code class="descname">options</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Responds to the OPTIONS reflight request</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.report_user">
+<code class="descclassname">data.views.</code><code class="descname">report_user</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#report_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.report_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports a specific user with a given id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> – The request made from the client.</li>
+<li><strong>user_id</strong> – The id of the user to report.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An HttpResponse with the number of the reports the reported user has (used for testing).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.views.show_home">
+<code class="descclassname">data.views.</code><code class="descname">show_home</code><span class="sig-paren">(</span><em>self</em>, <em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/views.html#show_home"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.views.show_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns in json the user type of the user to determine which home page to display.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> – The request made from the client.</li>
+<li><strong>profile_id</strong> – The id of the user to show the home page of.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A JsonResponse of the user_type.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/data_views.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, TG4.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/modules/data_views.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

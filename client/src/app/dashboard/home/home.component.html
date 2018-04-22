@@ -1,0 +1,25 @@
+<h1>My Study Groups</h1>
+<div
+  *ngFor="let key of studyGroupsKeyArray"
+  [attr.id]="'sg-' + studyGroups[key].id"
+  class="mui-panel">
+  <div class="mui-row">
+    <a [routerLink]="['/dashboard/group/' + studyGroups[key].id]">
+      <div class="mui-col-md-10">
+        <h2 class="sg-course">
+          {{ studyGroups[key].course_department }} {{ studyGroups[key].course_number }}: {{ studyGroups[key].course_name }}
+        </h2>
+        <p><strong>ID</strong>: {{ studyGroups[key].id }}</p>
+        <p>
+          <strong>Members</strong>: {{ members[key] }}
+        </p>
+      </div>
+    </a>
+    <div class="mui-col-md-2">
+      <button
+        class="mui-btn mui-btn--danger right leave-btn margin-top-0"
+        (click)="leaveStudyGroup(studyGroups[key].id)">Leave
+      </button>
+    </div>
+  </div>
+</div>

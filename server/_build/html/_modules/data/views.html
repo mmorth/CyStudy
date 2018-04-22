@@ -1,0 +1,297 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>data.views &#8212; cystudy  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for data.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Group</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">JsonResponse</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="k">import</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">login</span><span class="p">,</span> <span class="n">logout</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="k">import</span> <span class="n">csrf_exempt</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">get_object_or_404</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">renderers</span><span class="p">,</span> <span class="n">viewsets</span><span class="p">,</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="k">import</span> <span class="n">api_view</span><span class="p">,</span> <span class="n">detail_route</span>
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="k">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="k">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">data.models</span> <span class="k">import</span> <span class="n">Profile</span>
+<span class="kn">from</span> <span class="nn">data.helper</span> <span class="k">import</span> <span class="n">list_user_info</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Responds to the OPTIONS preflight request</span>
+<span class="c1"># @author John Jago</span>
+<div class="viewcode-block" id="options"><a class="viewcode-back" href="../../modules/data_views.html#data.views.options">[docs]</a><span class="k">def</span> <span class="nf">options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Responds to the OPTIONS reflight request</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">()</span>
+    <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Allow&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">response</span>
+
+<span class="c1"># ------------------------------ login and logout views -----------------------------------------------------------</span>
+
+<span class="c1"># View for login functionality</span>
+<span class="c1"># This method was modified from: https://docs.djangoproject.com/en/2.0/topics/auth/default/#how-to-log-a-user-in</span>
+<div class="viewcode-block" id="login_view"><a class="viewcode-back" href="../../modules/data_views.html#data.views.login_view">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">login_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the login functionality using Django authentication. The username and password are passed in from the client as json.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :return: An HttpResponse with either the username or an HttpResponse with status of 401.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+
+<span class="c1"># View for logout functionality</span>
+<span class="c1"># This method was found at: https://docs.djangoproject.com/en/2.0/topics/auth/default/#how-to-log-a-user-out</span>
+<div class="viewcode-block" id="logout_view"><a class="viewcode-back" href="../../modules/data_views.html#data.views.logout_view">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">logout_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the logout functionality using Django authentication.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :return: An empty HttpResponse.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">()</span>
+
+<span class="c1"># ----------------------------------- create, delete, and update user -------------------------------------------------------------------------------------------------------</span>
+
+<span class="c1"># View for creating a new user</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="create_user"><a class="viewcode-back" href="../../modules/data_views.html#data.views.create_user">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new user. The username, first_name, last_name, email, password, and user_type of the user are passed in from the client as json.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :return: An HttpResponse with the username of the user created (used for testing).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">create_username</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+    <span class="n">create_first_name</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span>
+    <span class="n">create_last_name</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span>
+    <span class="n">create_email</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+    <span class="n">create_password</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+
+    <span class="n">new_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">create_username</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="n">create_first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="n">create_last_name</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">create_email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">create_password</span><span class="p">)</span>
+    <span class="n">new_user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+    <span class="n">new_user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="n">user_type</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;user_type&#39;</span><span class="p">]</span>
+
+    <span class="n">new_profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">new_user</span><span class="p">,</span> <span class="n">reports</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">new_profile</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+
+<span class="c1"># View for deleting a existing user</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="delete_user"><a class="viewcode-back" href="../../modules/data_views.html#data.views.delete_user">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes a specific user with the give id.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :param user_id: The id of the user to remove.</span>
+<span class="sd">    :return: An HttpResponse with the username of the user created (used for testing).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">updat</span>
+    <span class="n">updated_user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">()</span>
+
+<span class="c1"># View to have the student change their information settings</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="change_user_settings"><a class="viewcode-back" href="../../modules/data_views.html#data.views.change_user_settings">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">change_user_settings</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Updates information on an existing user. The username, first_name, last_name, email, and password of the user are passed in from the client as json.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :param user_id: The id of the user to update informaion about.</span>
+<span class="sd">    :return: An HttpResponse with the username of the user created (used for testing).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">updated_user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span>
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span>
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+
+    <span class="n">new_user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+    <span class="n">updated_user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">updated_user</span><span class="p">)</span>
+
+<span class="c1"># --------------------------- display information about user&#39;s home page and user ---------------------------------------</span>
+
+<span class="c1"># View to show a user&#39;s home page</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="show_home"><a class="viewcode-back" href="../../modules/data_views.html#data.views.show_home">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">show_home</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">profile_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns in json the user type of the user to determine which home page to display.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :param profile_id: The id of the user to show the home page of.</span>
+<span class="sd">    :return: A JsonResponse of the user_type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">profile_id</span><span class="p">)</span>
+
+    <span class="n">profile_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">profile_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;user_type&quot;</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">user_type</span>
+    <span class="p">}</span>
+
+    <span class="n">profile_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile_info</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">profile_list</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># View to show information about a user</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="display_user"><a class="viewcode-back" href="../../modules/data_views.html#data.views.display_user">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">display_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns in json the information about a specific user. It returns the id, username, email, first_name, last_name, group, and reports for a user in json format.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :param id: The id of the user to show the information about.</span>
+<span class="sd">    :return: A JsonResponse of the user information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="n">users_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">user_info</span> <span class="o">=</span> <span class="n">list_user_info</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="n">users_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_info</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">users_list</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># View to list information about all users</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="list_users"><a class="viewcode-back" href="../../modules/data_views.html#data.views.list_users">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">list_users</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns in json the information about all users. It returns the id, username, email, first_name, last_name, group, and reports for all users in json format.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :return: A JsonResponse of the user information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">users</span> <span class="o">=</span> <span class="n">Profile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="n">users_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">users</span><span class="p">):</span>
+        <span class="n">user_info</span> <span class="o">=</span> <span class="n">list_user_info</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="n">users_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_info</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">users_list</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># ---------------------------------- Report Users --------------------------</span>
+
+<span class="c1"># View to report user</span>
+<span class="c1"># @author Matthew Orth</span>
+<div class="viewcode-block" id="report_user"><a class="viewcode-back" href="../../modules/data_views.html#data.views.report_user">[docs]</a><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">report_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reports a specific user with a given id.</span>
+
+<span class="sd">    :param request: The request made from the client.</span>
+<span class="sd">    :param user_id: The id of the user to report.</span>
+<span class="sd">    :return: An HttpResponse with the number of the reports the reported user has (used for testing).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">reports</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">reports</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, TG4.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

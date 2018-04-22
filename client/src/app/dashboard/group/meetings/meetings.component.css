@@ -1,0 +1,46 @@
+agm-map {
+  height: 300px;
+}
+
+a:link,
+a:visited,
+a:hover {
+  color: #2196f3;
+  cursor: pointer;
+}
+
+.btn-container {
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  font-size: 30px;
+  margin-top: -2px;
+  padding: 0 9px;
+  width: 36px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.meeting-list-map {
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.meeting-list-map-toggle {
+  background-color: #51c878;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-left: 5px;
+  padding: 3px;
+  width: 80px;
+}
+
+small {
+  color: #888;
+}

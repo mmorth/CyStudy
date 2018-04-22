@@ -1,0 +1,26 @@
+<h1>{{ group?.course_department }} {{ group?.course_number }}: {{ group?.course_name }}</h1>
+<p><strong>Group ID</strong>: {{ group?.id }}</p>
+<p><strong>Members</strong>: {{ members }}</p>
+<div class="info">
+  <strong>User reporting coming soon</strong>
+  <p>In the mean time, please contact the moderator at mod@cystudy.com to report users.</p>
+</div>
+<div class="mui-divider group-header-divider"></div>
+<ul class="mui-tabs__bar">
+  <li
+    [routerLinkActive]="['mui--is-active']"
+    [routerLinkActiveOptions]="{exact: true}">
+    <a [routerLink]="['/dashboard/group/' + groupID]">Meetings</a>
+  </li>
+  <li
+    [routerLinkActive]="['mui--is-active']"
+    [routerLinkActiveOptions]="{exact: true}">
+    <a [routerLink]="['/dashboard/group/' + groupID + '/notes']">Notes</a>
+  </li>
+  <li
+    [routerLinkActive]="['mui--is-active']"
+    [routerLinkActiveOptions]="{exact: true}">
+    <a [routerLink]="['/dashboard/group/' + groupID + '/chat']">Chat</a>
+  </li>
+</ul>
+<router-outlet></router-outlet>

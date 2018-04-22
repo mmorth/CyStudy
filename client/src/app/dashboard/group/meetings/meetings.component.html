@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="mui-col-md-6">
+    <h2 class="margin-bottom-30">Upcoming meetings</h2>
+    <div *ngFor="let key of keys" class="mui-panel">
+      <button
+        class="mui-btn mui-btn--flat mui-btn--danger right cancel-btn"
+        (click)="deleteMeeting(meetings[key].meeting_id)">×</button>
+      <p>
+        <strong>Where</strong>: {{ meetings[key].location }}
+        <button
+          class="meeting-list-map-toggle"
+          (click)="toggleMap(key, meetings[key].meeting_id)">Toggle Map
+        </button>
+      </p>
+      <div id="meeting-{{ meetings[key].meeting_id }}" class="meeting-list-map">
+        <agm-map [latitude]="meetings[key].lat" [longitude]="meetings[key].lng" [zoom]="16">
+          <agm-marker [latitude]="meetings[key].lat" [longitude]="meetings[key].lng"></agm-marker>
+        </agm-map>
+      </div>
+      <p><strong>When</strong>: {{ meetings[key].month }}/{{ meetings[key].day }}/{{ meetings[key].year }} {{ meetings[key].hour }}:{{ meetings[key].minute }}</p>
+      <p><strong>What</strong>: {{ meetings[key].description }}
+    </div>
+  </div>
+  <div class="mui-col-md-6">
+    <h2 class="margin-bottom-30">Create a meeting</h2>
+    <form class="mui-form" #meetingForm="ngForm" (ngSubmit)="createMeeting()">
+      <div class="mui-textfield">
+        <input
+          type="date"
+          [(ngModel)]="meeting.date"
+          name="date">
+        <label>Date</label>
+      </div>
+      <div class="mui-textfield">
+        <input
+          type="time"
+          [(ngModel)]="meeting.time"
+          name="time">
+        <label>Time</label>
+      </div>
+      <div class="mui-textfield">
+        <textarea
+          [(ngModel)]="meeting.description"
+          name="description"></textarea>
+        <label>Description</label>
+      </div>
+      <div class="mui-textfield">
+        <input
+          type="text"
+          name="location"
+          id="location"
+          [(ngModel)]="meeting.location"
+          (ngModelChange)="updateMap($event)">
+        <small>Don't know where you are? Take or upload a photo of a building with the button below the map.</small>
+        <label>Location</label>
+      </div>
+      <agm-map [latitude]="meeting.lat" [longitude]="meeting.lng" [zoom]="16">
+        <agm-marker [latitude]="meeting.lat" [longitude]="meeting.lng"></agm-marker>
+      </agm-map>
+      <div class="btn-container">
+        <button
+          type="submit"
+          class="mui-btn mui-btn--raised create-btn">Create Meeting
+        </button>
+        <label class="mui-btn mui-btn--raised">
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            capture
+            (change)="uploadImage()">
+            Location from Photo
+        </label>
+      </div>
+      <p>{{ meetingError }}</p>
+    </form>
+  </div>
+</div>
