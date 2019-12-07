@@ -11,6 +11,8 @@ Notes Creation: Each study group has a notes section where they can create “st
 Building Identifier: The building identifier allows the user to take a picture of an Iowa State University campus building, and the application will identify that specific building. This helps students know where they are on campus.
 Course Admin and Moderator Functionality: The course admin is in charge of creating and deleting courses. They also have the ability to delete study groups. The Moderator can report and ban students from participating in study groups.
 For this application, I mainly worked on the Django back-end and the MySQL database. During the project, I learned a lot about the software development process. I also learned about the difference between front and back end development and how to integrate the two together. I also learned more about approaches to learning new frameworks and programming languages by utilizing online resources (tutorials, discussion boards), my group members, and TAs.
+![alt text](https://github.com/mmorth/CyStudy/blob/master/Cystudy_Dashboard.png)
+![alt text](https://github.com/mmorth/CyStudy/blob/master/CyStudy_Groups.png)
 
 
 # Installation
